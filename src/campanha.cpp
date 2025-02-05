@@ -1,91 +1,62 @@
-#include "Campanha.h"
+#include "Campanha.hpp"
+#include "Batalhas.hpp"
 #include <iostream>
-#include <map>
-#include <algorithm>
+#include <cstdlib>  // Para rand()
+#include <ctime>   
+#include "Exercito.hpp" // Para inicializar números aleatórios
 
 using namespace std;
 
 // Construtor
-Campanha::Campanha() {}
-
-// Adiciona uma batalha à campanha
-void Campanha::adicionarBatalha(Batalha* batalha) {
-    batalhas.push_back(batalha);
+Campanha::Campanha() {
+    srand(time(0)); // Inicializa a semente do gerador de números aleatórios
 }
 
-// Simula todas as batalhas
-void Campanha::simularBatalhas() {
-    for (auto& batalha : batalhas) {
-        batalha->ataqueExercitoA();
-        batalha->ataqueExercitoB();
-        cout << batalha->getResultado() << endl;
-    }
-}
-
-// Gera a tabela de posições
-void Campanha::gerarTabelaDePosicoes() {
-    map<string, int> resultados; // Mapeia os nomes dos exércitos para pontos
-
-    for (auto& batalha : batalhas) {
-        string resultado = batalha->getResultado();
-        // Exemplo de parse simplificado
-        size_t posA = resultado.find(" ");
-        size_t posX = resultado.find("x");
-        size_t posB = resultado.rfind(" ");
-
-        string nomeA = resultado.substr(0, posA);
-        string nomeB = resultado.substr(posB + 1);
-
-        int pontosA = stoi(resultado.substr(posA + 1, posX - posA - 1));
-        int pontosB = stoi(resultado.substr(posX + 1, posB - posX - 1));
-
-        resultados[nomeA] += pontosA;
-        resultados[nomeB] += pontosB;
-    }
-
-    cout << "Tabela de posições:\n";
-    for (const auto& [nome, pontos] : resultados) {
-        cout << nome << ": " << pontos << " pontos\n";
-    }
-}
-
-// Mostra a unidade mais destrutiva
-void Campanha::mostrarUnidadeMaisDestrutiva() {
-    Unidade* unidadeMaisDestrutiva = nullptr;
-    int maxDestruicao = 0;
-
-    for (auto& batalha : batalhas) {
-        // Adapte para acessar unidades dos exércitos A e B
-        auto unidadesA = batalha->getExercitoA()->getUnidades();
-        auto unidadesB = batalha->getExercitoB()->getUnidades();
-
-        for (auto unidade : unidadesA) {
-            if (unidade->getDestruicoes() > maxDestruicao) {
-                maxDestruicao = unidade->getDestruicoes();
-                unidadeMaisDestrutiva = unidade;
-            }
-        }
-
-        for (auto unidade : unidadesB) {
-            if (unidade->getDestruicoes() > maxDestruicao) {
-                maxDestruicao = unidade->getDestruicoes();
-                unidadeMaisDestrutiva = unidade;
-            }
-        }
-    }
-
-    if (unidadeMaisDestrutiva) {
-        cout << "Unidade mais destrutiva:\n";
-        cout << "Poder de ataque: " << unidadeMaisDestrutiva->getPoderAtaque() << "\n";
-        cout << "Número de destruições: " << unidadeMaisDestrutiva->getDestruicoes() << "\n";
+// Sorteia dois exércitos e inicia uma batalha entre eles
+void Campanha::simularBatalhas(Batalhas& a) {
+    
+    if (a.getPontuacaoA() > a.getPontuacaoB()) {
+        cout << "\nVitoria do Exercito A! (" << a.getPontuacaoA() << " - " << a.getPontuacaoB() << ")";
+        a.resetarPontuacoes();
+        
+    } else if (a.getPontuacaoA() < a.getPontuacaoB()) {
+        cout << "\nVitoria do Exercito B! (" << a.getPontuacaoA() << " - " << a.getPontuacaoB() << ")";
+        a.resetarPontuacoes();
+        
     } else {
-        cout << "Nenhuma unidade registrou destruições.\n";
+        cout << "\nEmpate! (" << a.getPontuacaoA() << " - " << a.getPontuacaoB() << ")";
+        a.resetarPontuacoes();
+        
     }
+
+}
+void Campanha::adcicionaHistorico(Batalhas a) {
+    time_t now = time(0);
+    tm* localTime = localtime(&now);
+    std::ostringstream oss;
+    oss << std::put_time(localTime, "%d/%m/%Y %H:%M");
+    a.setData(oss.str());  // Primeiro, defina a data corretamente
+    batalhas.push_back(a); // Só então adicione ao vetor
+        
 }
 
-// Destrutor
-Campanha::~Campanha() {
-    for (auto& batalha : batalhas) {
-        delete batalha;
+
+void Campanha::exibirHistorico() const {
+    if (batalhas.empty()) {
+        cout << "Nenhuma batalha ocorreu ainda." << endl;
+        return;
     }
+
+    cout << "\n=== Histórico de Batalhas ===" << endl;
+    for (const auto& batalha : batalhas) {
+        cout << "\nExércitos envolvidos:" << endl;
+        cout << batalha.getResultados() << endl;
+        
+        }
+    }
+    
+
+// Destrutor - Libera memória das batalhas
+Campanha::~Campanha() {
+    batalhas.clear();  // Apenas limpa o vetor (nenhum delete necessário!)
 }

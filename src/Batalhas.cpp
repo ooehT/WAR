@@ -1,47 +1,77 @@
-#include "Batalhas.h"
+#include "Batalhas.hpp"
 #include <iostream>
 #include <cstdlib> // Para rand()
-#include "Unidade.h"
+#include "Unidade.hpp"
 using namespace std;
-#include "Batalhas.h"
-#include "Exercito.h"
+#include "Batalhas.hpp"
+#include "Exercito.hpp"
+#include "Date.hpp"
+#include "Campanha.hpp"
+#include <windows.h>
 
 // Construtor: inicializa a batalha com a data e os dois exércitos
-Batalha::Batalha(const std::string& data, Exercito* exercitoA, Exercito* exercitoB,)
-    : data(data), exercitoA(exercitoA), exercitoB(exercitoB), pontuacaoA(0), pontuacaoB(0) {}
+Batalhas::Batalhas()
+    : data(""), exercitoA(nullptr), exercitoB(nullptr), pontuacaoA(0), pontuacaoB(0), exercitos() {}
+
 
 
 // Simula um ataque do Exército A
-void Batalha::ataqueExercitoA() {
+void Batalhas::atribuiExercitoA(Exercito* a) { 
     // Calcula o poder total do Exército A
-    double poderTotalA = 0.0;
-    for (const auto& unidade : exercitoA->imprimeUnidades()) { // Certifique-se de ter um método `imprimeUnidades()` em `Exercito`
-        poderTotalA += unidade->getPoderAtaque();
-    }
+    exercitoA = a;
+    a->adicionaUnidades();
+    pontuacaoA = 0;
+    
+    // Agora percorre as unidades e soma seus poderes de ataque
+    for (const auto& unidade : exercitoA->getUnidades()) {
+        pontuacaoA += unidade->getPoderAtaque();
 
-    // Adiciona pontuação aleatória com base no poder de ataque
-    pontuacaoA += static_cast<int>(poderTotalA * ((rand() % 101) / 100.0));
+    }
 }
+    void Batalhas::resetarPontuacoes() {
+    pontuacaoA = 0;
+    pontuacaoB = 0;
+    }
 
 // Simula um ataque do Exército B
-void Batalha::ataqueExercitoB() {
+void Batalhas::atribuiExercitoB(Exercito* b) { 
     // Calcula o poder total do Exército B
-    double poderTotalB = 0.0;
-    for (const auto& unidade : exercitoB->imprimeUnidades()) { // Certifique-se de ter um método `imprimeUnidades()` em `Exercito`
-        poderTotalB += unidade->getPoderAtaque();
+    exercitoB = b;
+    b->adicionaUnidades();
+    pontuacaoB = 0;
+    
+    // Agora percorre as unidades e soma seus poderes de ataque
+    for (const auto& unidade : exercitoB->getUnidades()) {
+        pontuacaoB += unidade->getPoderAtaque();
+    }
+}
+    string Batalhas::getResultados() const {
+    ostringstream resultado;
+    resultado << "Data: " << data << "\n";
+    resultado << "\nExército A: " << exercitoA->getNome() << " (" << pontuacaoA << " pontos)\n";
+    resultado << "Exército B: " << exercitoB->getNome() << " (" << pontuacaoB << " pontos)\n";
+
+    if (pontuacaoA > pontuacaoB) {
+        resultado << "\nVitória do "<< exercitoA->getNome();
+    } else if (pontuacaoA < pontuacaoB) {
+        resultado << "\nVitória do "<< exercitoB->getNome();
+    } else {
+        resultado << "Empate!";
     }
 
-    // Adiciona pontuação aleatória com base no poder de ataque
-    pontuacaoB += static_cast<int>(poderTotalB * ((rand() % 101) / 100.0));
+    return resultado.str();
 }
 
-// Retorna o resultado da batalha
-std::string Batalha::getResultado() const {
-    return exercitoA->getNome() + " " + std::to_string(pontuacaoA) + " x " +
-           std::to_string(pontuacaoB) + " " + exercitoB->getNome();
+
+void Batalhas::setData(string d){
+    data = d;
 }
 
 // Destrutor
-Batalha::~Batalha() {
-    // Nada para liberar, os exércitos são gerenciados externamente
+Batalhas::~Batalhas() {
+    for (auto* exercito : exercitos) {  // Para cada ponteiro no vetor
+        delete exercito;  // Libera a memória do objeto Batalhas
+    }
+    exercitos.clear();  // Esvazia o vetor
 }
+

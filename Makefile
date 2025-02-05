@@ -1,27 +1,41 @@
-# Compilador
+# Nome do compilador
 CXX = g++
-CXXFLAGS = -Wall -Wextra -std=c++11
+
+# Flags do compilador
+CXXFLAGS = -Wall -Wextra -std=c++17
 
 # Diretórios
 SRC_DIR = src
-BUILD_DIR = build
-BIN = main.exe
+OBJ_DIR = obj
+BIN_DIR = bin
 
-# Lista de arquivos fonte (.cpp)
-SOURCES = $(wildcard $(SRC_DIR)/*.cpp)
+# Nome do executável
+TARGET = $(BIN_DIR)/war_game
 
-# Gerar arquivos objeto (.o) no diretório build/
-OBJECTS = $(patsubst $(SRC_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(SOURCES))
+# Arquivos fonte e objetos
+SRCS = $(wildcard $(SRC_DIR)/*.cpp)
+OBJS = $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SRCS))
 
 # Regra principal
-$(BIN): $(OBJECTS)
-	$(CXX) $(CXXFLAGS) -o $@ $^
+all: criar_dirs $(TARGET)
 
-# Regra para compilar os arquivos .cpp em .o
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
-	mkdir -p $(BUILD_DIR)
+# Compilação do executável
+$(TARGET): $(OBJS)
+	$(CXX) $(CXXFLAGS) $^ -o $@
+
+# Compilação dos arquivos objeto
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# Limpar os arquivos compilados
+# Criar diretórios se não existirem (compatível com Windows e Linux)
+criar_dirs:
+	@if not exist $(OBJ_DIR) mkdir $(OBJ_DIR)
+	@if not exist $(BIN_DIR) mkdir $(BIN_DIR)
+
+# Limpeza dos arquivos gerados
 clean:
-	rm -rf $(BUILD_DIR) $(BIN)
+	rm -rf $(OBJ_DIR)/*.o $(TARGET)
+
+# Limpeza completa + arquivos temporários
+cleanall: clean
+	rm -f *~ src/*~ obj/*~ bin/*~

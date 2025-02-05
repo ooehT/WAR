@@ -1,15 +1,32 @@
-#include "Exercito.h"
+#include "Exercito.hpp"
+#include "Infantaria.hpp"
+#include "Veiculo.hpp"
+#include "Aeronave.hpp"
 #include <iostream>
-#include "Unidade.h"
+
 
 using namespace std;
 
 // Construtor: inicializa o nome e os contadores de resultados
-Exercito::Exercito(const std::string& nome) : nome(nome), vitorias(0), derrotas(0), empates(0) {}
+Exercito::Exercito() {
+    // Construtor padrão
+    nome = "";  // Valor default
+    vitorias = 0;
+    derrotas = 0;
+}
 
+Exercito::Exercito(std::string nome) {
+    this->nome = nome;
+    vitorias = 0;
+    derrotas = 0;
+}
 // Adiciona uma unidade ao exército
-void Exercito::adicionaUnidade(Unidade* unidade) {
-    unidade.push_back(unidade);
+void Exercito::adicionaUnidades() {
+    unidades.push_back(new Infantaria());
+    unidades.push_back(new Infantaria());
+    unidades.push_back(new Veiculo());
+    unidades.push_back(new Veiculo());
+    unidades.push_back(new Aeronave());
 }
 
 // Registra uma vitória
@@ -28,27 +45,17 @@ void Exercito::registraEmpate() {
 }
 
 // Retorna o histórico de resultados
-std::string Exercito::getResultados() const {
-    return "Vitórias: " + std::to_string(vitorias) + ", Empates: " + std::to_string(empates) + 
-           ", Derrotas: " + std::to_string(derrotas);
-}
 
-// Imprime todas as unidades do exército
-const std::string& Exercito::imprimeUnidades() const {
-    cout << "Unidades do exército \"" << nome << "\":" << endl;
-    for (const auto& unidade : unidade) {
+    void Exercito::imprimeUnidades() const {
+        cout << "Unidades do exército \"" << nome << "\":" << endl;
+        for (const auto& unidade : unidades) {
         cout << " - Poder de Ataque: " << unidade->getPoderAtaque() << endl;
-    }
-}
-std::string Exercito::getNome() const {
-    return nome;
+        }
 }
 
-// Destrutor: libera a memória das unidades
 Exercito::~Exercito() {
- for (auto& unidade : unidade) {
-    delete unidade;  // Deleta cada ponteiro armazenado no vetor
-}
-unidade.clear();  // Limpa o vetor após deletar os elementos
-
+    for (auto& u : unidades) {
+        delete u;  // Deleta cada ponteiro armazenado no vetor
+    }
+    unidades.clear();  // Limpa o vetor após deletar os elementos
 }
