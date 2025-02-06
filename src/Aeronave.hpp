@@ -14,6 +14,6 @@ private:
 
 public:
     Aeronave();
-    double getPoderAtaque() const override;
+    double getPoderAtaque() override;
 };
 #endif 

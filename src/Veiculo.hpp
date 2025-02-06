@@ -15,7 +15,7 @@ private:
 
 public:
     Veiculo();
-    double getPoderAtaque() const override;
+    double getPoderAtaque() override;
 };
 
 #endif 

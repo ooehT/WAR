@@ -11,6 +11,7 @@ using namespace std;
 
 Unidade::Unidade(int poderAtaque, int destruicoes){
      // Chama o construtor da classe base
+    
     this->poderAtaque = poderAtaque;
     this->destruicoes = destruicoes;
 }

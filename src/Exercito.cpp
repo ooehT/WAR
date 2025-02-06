@@ -22,32 +22,55 @@ Exercito::Exercito(std::string nome) {
 }
 // Adiciona uma unidade ao exército
 void Exercito::adicionaUnidades() {
+    // Primeiro, libera memória das unidades existentes
+    for (auto& u : unidades) {
+        delete u;
+    }
+    unidades.clear(); // Limpa o vetor
+
+    // Agora adiciona as novas unidades
     unidades.push_back(new Infantaria());
     unidades.push_back(new Infantaria());
     unidades.push_back(new Veiculo());
     unidades.push_back(new Veiculo());
     unidades.push_back(new Aeronave());
+    
 }
 
+void Exercito::apagaVet(){
+    for (auto& u : unidades) {
+        delete u;
+    }
+    unidades.clear();
+}
 // Registra uma vitória
 void Exercito::registraVitoria() {
     vitorias++;
+    
 }
 
 // Registra uma derrota
 void Exercito::registraDerrota() {
     derrotas++;
+    for (auto& u : unidades) {
+        delete u;
+    }
+    unidades.clear();
 }
 
 // Registra um empate
 void Exercito::registraEmpate() {
     empates++;
+    for (auto& u : unidades) {
+        delete u;
+    }
+    unidades.clear();
 }
 
 // Retorna o histórico de resultados
 
     void Exercito::imprimeUnidades() const {
-        cout << "Unidades do exército \"" << nome << "\":" << endl;
+        cout << "Unidades do exercito \"" << nome << "\":" << endl;
         for (const auto& unidade : unidades) {
         cout << " - Poder de Ataque: " << unidade->getPoderAtaque() << endl;
         }

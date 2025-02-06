@@ -28,12 +28,11 @@ public:
 
     std::string getNome() const { return nome; }
     const std::vector<Unidade*>& getUnidades() { return unidades; }
-
     void adicionaUnidades();
     void registraVitoria();
     void registraDerrota();
     void registraEmpate();
-    
+    void apagaVet();
     void imprimeUnidades() const;
     void gerarValoresDiferentes();
 };

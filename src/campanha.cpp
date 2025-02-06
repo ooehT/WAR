@@ -16,29 +16,29 @@ Campanha::Campanha() {
 void Campanha::simularBatalhas(Batalhas& a) {
     
     if (a.getPontuacaoA() > a.getPontuacaoB()) {
-        cout << "\nVitoria do Exercito A! (" << a.getPontuacaoA() << " - " << a.getPontuacaoB() << ")";
-        a.resetarPontuacoes();
+        cout << "\n(" << a.getPontuacaoA() << " - " << a.getPontuacaoB() << ")";
         
     } else if (a.getPontuacaoA() < a.getPontuacaoB()) {
-        cout << "\nVitoria do Exercito B! (" << a.getPontuacaoA() << " - " << a.getPontuacaoB() << ")";
-        a.resetarPontuacoes();
+        cout << "\n(" << a.getPontuacaoA() << " - " << a.getPontuacaoB() << ")";
+
         
     } else {
         cout << "\nEmpate! (" << a.getPontuacaoA() << " - " << a.getPontuacaoB() << ")";
-        a.resetarPontuacoes();
         
     }
-
 }
-void Campanha::adcicionaHistorico(Batalhas a) {
+
+void Campanha::adicicionaHistorico(Batalhas& a) {  // ✅ Agora está igual ao .hpp
     time_t now = time(0);
     tm* localTime = localtime(&now);
     std::ostringstream oss;
     oss << std::put_time(localTime, "%d/%m/%Y %H:%M");
-    a.setData(oss.str());  // Primeiro, defina a data corretamente
-    batalhas.push_back(a); // Só então adicione ao vetor
-        
+
+    a.setData(oss.str());  
+    batalhas.push_back(a);
+    
 }
+
 
 
 void Campanha::exibirHistorico() const {
@@ -53,7 +53,9 @@ void Campanha::exibirHistorico() const {
         cout << batalha.getResultados() << endl;
         
         }
+        
     }
+
     
 
 // Destrutor - Libera memória das batalhas

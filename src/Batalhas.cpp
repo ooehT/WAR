@@ -18,26 +18,25 @@ Batalhas::Batalhas()
 // Simula um ataque do Exército A
 void Batalhas::atribuiExercitoA(Exercito* a) { 
     // Calcula o poder total do Exército A
-    exercitoA = a;
-    a->adicionaUnidades();
+
     pontuacaoA = 0;
+    exercitoA = a;
     
     // Agora percorre as unidades e soma seus poderes de ataque
     for (const auto& unidade : exercitoA->getUnidades()) {
+        
         pontuacaoA += unidade->getPoderAtaque();
 
     }
+    exercitoA->imprimeUnidades();
+
 }
-    void Batalhas::resetarPontuacoes() {
-    pontuacaoA = 0;
-    pontuacaoB = 0;
-    }
 
 // Simula um ataque do Exército B
 void Batalhas::atribuiExercitoB(Exercito* b) { 
     // Calcula o poder total do Exército B
     exercitoB = b;
-    b->adicionaUnidades();
+    exercitoB->imprimeUnidades();
     pontuacaoB = 0;
     
     // Agora percorre as unidades e soma seus poderes de ataque
@@ -47,14 +46,14 @@ void Batalhas::atribuiExercitoB(Exercito* b) {
 }
     string Batalhas::getResultados() const {
     ostringstream resultado;
-    resultado << "Data: " << data << "\n";
-    resultado << "\nExército A: " << exercitoA->getNome() << " (" << pontuacaoA << " pontos)\n";
-    resultado << "Exército B: " << exercitoB->getNome() << " (" << pontuacaoB << " pontos)\n";
+    resultado << "\nData: " << data << "\n";
+    resultado << "\nExercito : " << exercitoA->getNome() << " (" << pontuacaoA << " pontos)\n";
+    resultado << "Exercito : " << exercitoB->getNome() << " (" << pontuacaoB << " pontos)\n";
 
     if (pontuacaoA > pontuacaoB) {
-        resultado << "\nVitória do "<< exercitoA->getNome();
+        resultado << "\nVitoria do "<< exercitoA->getNome();
     } else if (pontuacaoA < pontuacaoB) {
-        resultado << "\nVitória do "<< exercitoB->getNome();
+        resultado << "\nVitoria do "<< exercitoB->getNome();
     } else {
         resultado << "Empate!";
     }

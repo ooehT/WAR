@@ -19,7 +19,7 @@ public:
 
     // Simula todas as batalhas
     void simularBatalhas(Batalhas& a);
-    void adcicionaHistorico(Batalhas a);
+    void adicicionaHistorico(Batalhas& a);
     // Gera a tabela de posições (resultados dos exércitos)
     void gerarTabelaDePosicoes();
 

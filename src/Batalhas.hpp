@@ -20,7 +20,7 @@ public:
     void atribuiExercitoB(Exercito* b);
     int getPontuacaoA()  { return pontuacaoA; };
     int getPontuacaoB() { return pontuacaoB; };
-    void resetarPontuacoes();
+    void resetarPontuacoe(Batalhas* a);
     // Retorna o resultado da batalha
     string getResultados() const;
     

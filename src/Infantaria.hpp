@@ -10,7 +10,7 @@ private:
 
 public:
     Infantaria();  // Construtor
-    double getPoderAtaque() const override;
+    double getPoderAtaque() override;
 };
 
 #endif

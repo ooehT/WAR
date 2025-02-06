@@ -18,7 +18,7 @@ public:
     Unidade(int poderAtaque, int destruicoes);
     virtual ~Unidade();
 
-    virtual double getPoderAtaque() const = 0;
+    virtual double getPoderAtaque();
     virtual void somaDestruicao();
 };
 
