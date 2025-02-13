@@ -8,6 +8,8 @@
 #include "Exercito.hpp"
 #include "Campanha.hpp"
 #include "date.hpp"
+#include <algorithm> 
+
 
 using namespace std;
 
@@ -16,6 +18,7 @@ int main() {
     Batalhas aux;
     vector<Exercito*> exercitos;  // Vetor para armazenar os exercitos
     int numExercitos;
+    int cont = 0;
     Exercito a;
     cout << "Quantos exercitos deseja criar? ";
     cin >> numExercitos;
@@ -43,10 +46,10 @@ int main() {
         cout << "1. Iniciar batalha aleatoria" << endl;
         cout << "2. Escolher exercitos para batalhar" << endl;
         cout << "3. Exibir historico de batalhas" << endl;
-        cout << "4. Sair" << endl;
+        cout << "4. Rank" << endl;
+        cout << "0. Sair" << endl;
         cout << "Escolha uma opcao: ";
         cin >> opcao;
-
         if (opcao == 1) {
             idxA = rand() % exercitos.size();
 
@@ -54,18 +57,26 @@ int main() {
                 idxB = rand() % exercitos.size();
             } while (idxA == idxB);
 
-            aux.atribuiExercitoA(exercitos[idxA]);
-            aux.atribuiExercitoB(exercitos[idxB]);
+            do{
+                if(cont == 0){
+                    cout << "BATALHA DE IDA" << endl;
+                }else{
+                    cout << "BATALHA DE VOLTA" << endl;
+                }
+           
+            campanha.simularBatalhas(exercitos[idxA], exercitos[idxB]);
+            aux.atribuiExercito(exercitos[idxA], exercitos[idxB]);
             
-            campanha.simularBatalhas(aux);
             campanha.adicicionaHistorico(aux);
             cout << aux.getResultados() << endl;
-
+            //aux.registraVitoria(exercitos[idxA], exercitos[idxB]);
             exercitos[idxA]->adicionaUnidades();
             exercitos[idxB]->adicionaUnidades();
-
-
-            
+            exercitos[idxA]->resetFlag();
+            exercitos[idxB]->resetFlag();
+            cont++;
+            }while(cont < 2);
+            cont = 0;
         }
         else if (opcao == 2) {
             if (exercitos.size() < 2) {
@@ -80,21 +91,38 @@ int main() {
             cin >> idxB;
 
             if (idxA >= 1 && idxA <= exercitos.size() && idxB >= 1 && idxB <= exercitos.size() && idxA != idxB) {
-            aux.atribuiExercitoA(exercitos[idxA - 1]);
-            aux.atribuiExercitoB(exercitos[idxB - 1]);
+            do{
+            if(cont == 0){
+                cout << "BATALHA DE IDA" << endl;
+            }else{
+                cout << "BATALHA DE VOLTA" << endl;
+            }
            
-            campanha.simularBatalhas(aux);
+            campanha.simularBatalhas(exercitos[idxA], exercitos[idxB]);
+            
+            aux.atribuiExercito(exercitos[idxA], exercitos[idxB]);
+            
             campanha.adicicionaHistorico(aux);
-            
-            
+            cout << aux.getResultados() << endl;
+            //aux.registraVitoria(exercitos[idxA - 1], exercitos[idxB - 1]);
+            exercitos[idxA - 1]->adicionaUnidades();
+            exercitos[idxB - 1]->adicionaUnidades();
+            cont++;
+            }while(cont < 2);
+            cont = 0;
+
+
 
             }
         }
         else if (opcao == 3) {
             campanha.exibirHistorico();
+        }else if (opcao == 4){
+            campanha.gerarTabelaDePosicoes(exercitos);
+
         }
 
-    } while (opcao != 4);
+    } while (opcao != 0);
 
     // Liberando memoria
     for (Exercito* e : exercitos) {

@@ -16,14 +16,16 @@ public:
     Batalhas();
     void setData(string d);
     // Métodos para simular ataques
-    void atribuiExercitoA(Exercito* a);
-    void atribuiExercitoB(Exercito* b);
+    void atribuiExercito(Exercito* a, Exercito* b);
     int getPontuacaoA()  { return pontuacaoA; };
     int getPontuacaoB() { return pontuacaoB; };
     void resetarPontuacoe(Batalhas* a);
+    void setPontuacaoA(int a);
+    void setPontuacaoB(int a);
     // Retorna o resultado da batalha
-    string getResultados() const;
-    
+    string getResultados()const;
+    //void registraVitoria(Exercito* a, Exercito *b);
+
     // Destrutor
     ~Batalhas();
 

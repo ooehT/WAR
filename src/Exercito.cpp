@@ -14,7 +14,12 @@ Exercito::Exercito() {
     vitorias = 0;
     derrotas = 0;
 }
-
+void Exercito::setFlag(){
+    flag = 1;
+}
+void Exercito::resetFlag(){
+    flag = 0;
+}
 Exercito::Exercito(std::string nome) {
     this->nome = nome;
     vitorias = 0;
@@ -52,19 +57,12 @@ void Exercito::registraVitoria() {
 // Registra uma derrota
 void Exercito::registraDerrota() {
     derrotas++;
-    for (auto& u : unidades) {
-        delete u;
-    }
-    unidades.clear();
+
 }
 
 // Registra um empate
 void Exercito::registraEmpate() {
     empates++;
-    for (auto& u : unidades) {
-        delete u;
-    }
-    unidades.clear();
 }
 
 // Retorna o histórico de resultados
@@ -82,3 +80,24 @@ Exercito::~Exercito() {
     }
     unidades.clear();  // Limpa o vetor após deletar os elementos
 }
+
+
+
+/*
+typedef struct menor
+{
+char nome; 
+int vitorias;
+}
+
+
+for(int i=0; i<numExercitos;i++)
+{
+int me
+if(vetExercitos.vitorias[i]<100)
+{
+menor=vetExercitos.vitorias[i];
+}
+printf(menor)
+}
+*/

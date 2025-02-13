@@ -18,17 +18,18 @@ public:
     void adicionarBatalha(Batalhas* batalha);
 
     // Simula todas as batalhas
-    void simularBatalhas(Batalhas& a);
+    void simularBatalhas(Exercito* a, Exercito* b);
     void adicicionaHistorico(Batalhas& a);
     // Gera a tabela de posições (resultados dos exércitos)
-    void gerarTabelaDePosicoes();
-
+    void gerarTabelaDePosicoes(vector<Exercito*> exercitos);
     Batalhas getVetor();
     // Mostra a unidade mais destrutiva da campanha
     void mostrarUnidadeMaisDestrutiva();
     // Destrutor para liberar memóri
     void iniciarBatalha();
+    int compara(int pontA, int pontB);
     void exibirHistorico() const;
+    
     ~Campanha();
 };
 

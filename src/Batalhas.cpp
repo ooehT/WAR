@@ -13,59 +13,56 @@ using namespace std;
 Batalhas::Batalhas()
     : data(""), exercitoA(nullptr), exercitoB(nullptr), pontuacaoA(0), pontuacaoB(0), exercitos() {}
 
-
-
-// Simula um ataque do Exército A
-void Batalhas::atribuiExercitoA(Exercito* a) { 
-    // Calcula o poder total do Exército A
-
-    pontuacaoA = 0;
-    exercitoA = a;
     
-    // Agora percorre as unidades e soma seus poderes de ataque
-    for (const auto& unidade : exercitoA->getUnidades()) {
-        
-        pontuacaoA += unidade->getPoderAtaque();
-
-    }
-    exercitoA->imprimeUnidades();
-
-}
-
+    
 // Simula um ataque do Exército B
-void Batalhas::atribuiExercitoB(Exercito* b) { 
-    // Calcula o poder total do Exército B
-    exercitoB = b;
-    exercitoB->imprimeUnidades();
-    pontuacaoB = 0;
-    
-    // Agora percorre as unidades e soma seus poderes de ataque
-    for (const auto& unidade : exercitoB->getUnidades()) {
-        pontuacaoB += unidade->getPoderAtaque();
-    }
-}
-    string Batalhas::getResultados() const {
+    string Batalhas::getResultados()const
+    {
     ostringstream resultado;
     resultado << "\nData: " << data << "\n";
-    resultado << "\nExercito : " << exercitoA->getNome() << " (" << pontuacaoA << " pontos)\n";
-    resultado << "Exercito : " << exercitoB->getNome() << " (" << pontuacaoB << " pontos)\n";
+    resultado << "\nExercito : " << exercitoA->getNome() <<"\n"<< endl;
+    resultado << "Exercito : " << exercitoB->getNome() <<"\n"<< endl;
 
-    if (pontuacaoA > pontuacaoB) {
+    if (exercitoA->getFlag() == true || pontuacaoA == 1) {
         resultado << "\nVitoria do "<< exercitoA->getNome();
-    } else if (pontuacaoA < pontuacaoB) {
+
+    } else if (exercitoB->getFlag() == true || pontuacaoB == 1) {
         resultado << "\nVitoria do "<< exercitoB->getNome();
-    } else {
+
+    } else if( exercitoA->getFlag() == false && exercitoB->getFlag() == false){
         resultado << "Empate!";
+
     }
+   
 
     return resultado.str();
 }
 
-
+void Batalhas::atribuiExercito(Exercito* a, Exercito* b){
+    exercitoA = a;
+    exercitoB = b;
+    pontuacaoA = a->getFlag();
+    pontuacaoB = b->getFlag();
+}
 void Batalhas::setData(string d){
     data = d;
 }
+/*void Batalhas::registraVitoria(Exercito* a, Exercito *b){
+    if (pontuacaoA > pontuacaoB) {
+       a->registraVitoria();
+       a->registraDerrota();
 
+    } else if (pontuacaoA < pontuacaoB) {
+        b->registraVitoria();
+        a->registraDerrota();
+
+    } else {
+        a->registraEmpate();
+        b->registraEmpate();
+
+    }
+}
+*/
 // Destrutor
 Batalhas::~Batalhas() {
     for (auto* exercito : exercitos) {  // Para cada ponteiro no vetor

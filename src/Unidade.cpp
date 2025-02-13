@@ -15,10 +15,9 @@ Unidade::Unidade(int poderAtaque, int destruicoes){
     this->poderAtaque = poderAtaque;
     this->destruicoes = destruicoes;
 }
-double Unidade::getPoderAtaque() {
+double Unidade::getPoderAtaque(){
     return poderAtaque;
 }
-
 
 Unidade::~Unidade() {} 
 
