@@ -1,151 +1,133 @@
-#include "Campanha.hpp"
-#include "Batalhas.hpp"
-#include "Unidade.hpp" 
-#include <iostream>
-#include <cstdlib>  // Para rand()
-#include <ctime>   
-#include "Exercito.hpp" // Para inicializar números aleatórios
-#include <algorithm> 
-#include <limits.h>
-#include <vector>
-#include <iomanip>
+#include "Campanha.hpp"   // Inclui a definição da classe `Campanha`.
+#include "Batalhas.hpp"   // Inclui a definição da classe `Batalhas`.
+#include "Unidade.hpp"    // Inclui a definição da classe `Unidade`.
+#include <iostream>       // Para entrada e saída.
+#include <cstdlib>        // Para funções como rand().
+#include <ctime>          // Para inicializar a semente do gerador aleatório e trabalhar com data/hora.
+#include "Exercito.hpp"   // Para trabalhar com a classe `Exercito`.
+#include <algorithm>      // Para funções de algoritmo padrão, como sort().
+#include <limits.h>       // Para valores como INT_MAX e INT_MIN.
+#include <vector>         // Para trabalhar com o contêiner `std::vector`.
+#include <iomanip>        // Para formatação de saída, como `setw`.
+
 using namespace std;
 
 // Construtor
 Campanha::Campanha() {
-    srand(time(0)); // Inicializa a semente do gerador de números aleatórios
+    srand(time(0)); // Inicializa a semente do gerador de números aleatórios para gerar resultados diferentes a cada execução.
 }
 
-// Sorteia dois exércitos e inicia uma batalha entre eles
+// Simula batalhas entre dois exércitos fornecidos.
 void Campanha::simularBatalhas(Exercito* a, Exercito* b) {
-    
-    int pontuacaoB = 0;
-    int pontuacaoA = 0;
+    int pontuacaoB = 0, pontuacaoA = 0; // Pontuações para os dois exércitos.
+    int vitoriaA = 0, vitoriaB = 0;    // Contadores de vitórias.
 
-    int vitoriaA, vitoriaB;
+    vector<Unidade*> ExB = b->getUnidades(); // Obtém as unidades do exército B.
+    vector<Unidade*> ExA = a->getUnidades(); // Obtém as unidades do exército A.
 
-   
-    vector<Unidade*> ExB = a->getUnidades(); 
-    vector<Unidade*> ExA = a->getUnidades(); 
-    // Agora percorre as unidades e soma seus poderes de ataque
-    
-    for(unsigned int i = 0; i < ExB.size(); i++)
-    {   
-        
-        if(i < 2 ){
-        pontuacaoA+=ExA[i]->getPoderAtaque();
-        pontuacaoB+=ExB[i]->getPoderAtaque();
-        
-        if(i == 1){
-            if(compara(pontuacaoA, pontuacaoB)==1)
-            {
-                vitoriaA++;
-            }
-            else if(compara(pontuacaoA, pontuacaoB)==2)
-            {
-                vitoriaB++;
-            }
-            else
-            {
-                a->registraEmpate();
-                b->registraEmpate();
-            }
-        pontuacaoA = 0;
-        pontuacaoB = 0;
-            }
-        }
-        if((i > 2) && (i<4))
-        {
-            pontuacaoA+=ExA[i]->getPoderAtaque();
-            pontuacaoB+=ExB[i]->getPoderAtaque();
-            
-            if(i == 1){
-                if(compara(pontuacaoA, pontuacaoB)==1)
-                {
-                    vitoriaA++;
-                }
-                else if(compara(pontuacaoA, pontuacaoB)==2)
-                {
-                    vitoriaB++;
-                }
-                else
-                {
+    // Itera pelas unidades dos exércitos para calcular o poder de ataque em "rodadas".
+    for (unsigned int i = 0; i < ExB.size(); i++) {
+        if (i < 2) {  // Primeira rodada (duas primeiras unidades).
+            pontuacaoA += ExA[i]->getPoderAtaque();
+            pontuacaoB += ExB[i]->getPoderAtaque();
+
+            if (i == 1) {  // Após a segunda unidade, compara as pontuações.
+                if (compara(pontuacaoA, pontuacaoB) == 1) {
+                    vitoriaA++;  // Vitória para o exército A.
+                } else if (compara(pontuacaoA, pontuacaoB) == 2) {
+                    vitoriaB++;  // Vitória para o exército B.
+                } else {
                     a->registraEmpate();
                     b->registraEmpate();
                 }
-                pontuacaoA = 0;
-                pontuacaoB = 0;
+                pontuacaoA = pontuacaoB = 0; // Reseta as pontuações para a próxima rodada.
             }
         }
-            if(i == 4){
-                pontuacaoA+=ExA[i]->getPoderAtaque();
-                pontuacaoB+=ExB[i]->getPoderAtaque();
-                
-                if(i == 4){
-                    if(compara(pontuacaoA, pontuacaoB)==1)
-                    {
-                        vitoriaA++;
-                    }
-                    else if(compara(pontuacaoA, pontuacaoB)==2)
-                    {
-                        vitoriaB++;
-                    }
-                    else
-                    {
-                        a->registraEmpate();
-                        b->registraEmpate();
-                    }
-                    
-                pontuacaoA = 0;
-                pontuacaoB = 0;
-                    }
-                    
-                    if(compara(vitoriaA, vitoriaB) == 1){
-                        vitoriaA++;
-                        a->registraVitoria();
-                       
-                        
-                    }else if(compara(vitoriaA, vitoriaB) == 2){
-                        vitoriaB++;
-                        b->registraVitoria();
 
-                    }
-                    if (vitoriaA > vitoriaB) {
-                       a->setFlag();
+        // Segunda rodada (terceira e quarta unidades).
+        if ((i > 2) && (i < 4)) {
+            pontuacaoA += ExA[i]->getPoderAtaque();
+            pontuacaoB += ExB[i]->getPoderAtaque();
 
-                        
-                    } else if (vitoriaA < vitoriaB) {
-                        b->setFlag();
-                
-                    }
-                    a->imprimeUnidades();
-                    b->imprimeUnidades();
-               }
+            if (i == 3) {  // Após a quarta unidade, compara as pontuações.
+                if (compara(pontuacaoA, pontuacaoB) == 1) {
+                    vitoriaA++;
+                } else if (compara(pontuacaoA, pontuacaoB) == 2) {
+                    vitoriaB++;
+                } else {
+                    a->registraEmpate();
+                    b->registraEmpate();
+                }
+                pontuacaoA = pontuacaoB = 0;
             }
-        
         }
-int Campanha::compara(int pontA, int pontB){
-    if(pontA>pontB){
-        return 1;
+
+        // Última unidade (quinta).
+        if (i == 4) {
+            pontuacaoA += ExA[i]->getPoderAtaque();
+            pontuacaoB += ExB[i]->getPoderAtaque();
+
+            if (i == 4) {
+                if (compara(pontuacaoA, pontuacaoB) == 1) {
+                    vitoriaA++;
+                } else if (compara(pontuacaoA, pontuacaoB) == 2) {
+                    vitoriaB++;
+                } else {
+                    a->registraEmpate();
+                    b->registraEmpate();
+                }
+
+                pontuacaoA = pontuacaoB = 0;
+            }
+
+            // Determina o vencedor geral.
+            if (compara(vitoriaA, vitoriaB) == 1) {
+                vitoriaA++;
+                a->registraVitoria(); // Registra vitória para o exército A.
+            } else if (compara(vitoriaA, vitoriaB) == 2) {
+                vitoriaB++;
+                b->registraVitoria(); // Registra vitória para o exército B.
+            }
+
+            // Atualiza flags de vitória/derrota.
+            if (vitoriaA > vitoriaB) {
+                a->setFlag();
+            } else if (vitoriaA < vitoriaB) {
+                b->setFlag();
+            }
+
+            // Exibe as unidades de ambos os exércitos.
+            a->imprimeUnidades();
+            b->imprimeUnidades();
+        }
     }
-    if(pontA<pontB){
+}
+
+// Função que compara duas pontuações e retorna:
+// 1 se `pontA` for maior,
+// 2 se `pontB` for maior,
+// 0 em caso de empate.
+int Campanha::compara(int pontA, int pontB) {
+    if (pontA > pontB) {
+        return 1;
+    } else if (pontA < pontB) {
         return 2;
-    }else{
+    } else {
         return 0;
     }
 }
 
-
-void Campanha::adicicionaHistorico(Batalhas& a) {  // ✅ Agora está igual ao .hpp
-    time_t now = time(0);
-    tm* localTime = localtime(&now);
+// Adiciona uma batalha ao histórico.
+void Campanha::adicicionaHistorico(Batalhas& a) {
+    time_t now = time(0);           // Obtém o horário atual.
+    tm* localTime = localtime(&now); // Converte para o formato de data/hora local.
     std::ostringstream oss;
-    oss << std::put_time(localTime, "%d/%m/%Y %H:%M");
-    a.setData(oss.str());  
-    batalhas.push_back(a);
-    
+    oss << std::put_time(localTime, "%d/%m/%Y %H:%M"); // Formata a data/hora.
+    a.setData(oss.str());         // Define a data na batalha.
+    batalhas.push_back(a);        // Adiciona a batalha ao histórico.
 }
 
+// Exibe o histórico de batalhas armazenado.
 void Campanha::exibirHistorico() const {
     if (batalhas.empty()) {
         cout << "Nenhuma batalha ocorreu ainda." << endl;
@@ -154,28 +136,27 @@ void Campanha::exibirHistorico() const {
 
     cout << "\n=== Histórico de Batalhas ===" << endl;
     for (const auto& batalha : batalhas) {
-        cout << "\nExercitos envolvidos:" << endl;
+        cout << "\nExércitos envolvidos:" << endl;
         cout << batalha.getResultados() << endl;
-        
-        }
-        
     }
+}
 
-
+// Gera uma tabela de posições baseada no número de vitórias dos exércitos.
 void Campanha::gerarTabelaDePosicoes(vector<Exercito*> exercitos) {
     int size = exercitos.size();
-    int x = 1;  // Posição do vencedor
-    int vet[size] = {0};  // Inicializa o vetor todo com 0
+    int x = 1;               // Posição inicial.
+    int vet[size] = {0};     // Marca quais exércitos já foram processados.
 
-    // Cabeçalho da tabela
-    cout << left << setw(12) << "Posicao" << setw(27) << "     Exercito" << setw(25) << "Vitorias" << endl;  // Ajustei o setw para Exército
+    // Cabeçalho da tabela.
+    cout << left << setw(12) << "Posição" << setw(27) << "Exército" << setw(25) << "Vitórias" << endl;
     cout << "---------------------------------------------------------------" << endl;
 
     for (int count = 0; count < size; count++) {
-        int maior = -1000000;  // Resetando o maior antes de cada busca
+        int maior = INT_MIN; // Define o menor valor possível.
         int indiceMaior = -1;
         string maiorNome;
 
+        // Encontra o exército com mais vitórias que ainda não foi processado.
         for (int i = 0; i < size; i++) {
             if (vet[i] == 0 && exercitos[i]->retornaVitoria() > maior) {
                 maior = exercitos[i]->retornaVitoria();
@@ -184,25 +165,19 @@ void Campanha::gerarTabelaDePosicoes(vector<Exercito*> exercitos) {
             }
         }
 
-        if (indiceMaior != -1) {  // Evita marcar índice inválido
-            // Impressão formatada
-            cout << left << setw(20) << x            // Posição
-                 << setw(25) << maiorNome         // Nome do exército ajustado para mais à direita
-                 << setw(25) << maior            // Número de vitórias
+        if (indiceMaior != -1) { // Evita processar índices inválidos.
+            cout << left << setw(20) << x  // Posição.
+                 << setw(25) << maiorNome  // Nome do exército.
+                 << setw(25) << maior     // Número de vitórias.
                  << endl;
 
-            vet[indiceMaior] = 1;  // Marca o maior como já impresso
-            x++;  // Incrementa a posição para o próximo
+            vet[indiceMaior] = 1; // Marca o exército como processado.
+            x++;                  // Incrementa a posição.
         }
     }
 }
 
-
-
-
-// Destrutor - Libera memória das batalhas
+// Destrutor: Limpa o histórico de batalhas.
 Campanha::~Campanha() {
-    batalhas.clear();  // Apenas limpa o vetor (nenhum delete necessário!)
+    batalhas.clear(); // Libera memória associada ao vetor de batalhas.
 }
-
-
